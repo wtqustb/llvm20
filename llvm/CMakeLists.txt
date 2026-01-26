@@ -534,6 +534,7 @@ set(LLVM_ALL_TARGETS
   SystemZ
   VE
   WebAssembly
+  Weather
   X86
   XCore
   )

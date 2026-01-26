@@ -37,6 +37,7 @@
 #include "Targets/TCE.h"
 #include "Targets/VE.h"
 #include "Targets/WebAssembly.h"
+#include "Targets/Weather.h"
 #include "Targets/X86.h"
 #include "Targets/XCore.h"
 #include "Targets/Xtensa.h"
@@ -138,6 +139,8 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
       return std::make_unique<AppleMachOAArch64TargetInfo>(Triple, Opts);
 
     return nullptr;
+  case llvm::Triple::weather:
+    return std::make_unique<WeatherTargetInfo>(Triple, Opts);
   case llvm::Triple::aarch64:
     if (Triple.isOSDarwin())
       return std::make_unique<DarwinAArch64TargetInfo>(Triple, Opts);
@@ -174,7 +177,7 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
                                                                       Opts);
     case llvm::Triple::Hurd:
       return std::make_unique<HurdTargetInfo<AArch64leTargetInfo>>(Triple,
-                                                                   Opts);
+                                                                   Opts);                                                              
     case llvm::Triple::Win32:
       switch (Triple.getEnvironment()) {
       case llvm::Triple::GNU:

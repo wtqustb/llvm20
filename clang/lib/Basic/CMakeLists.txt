@@ -119,6 +119,7 @@ add_clang_library(clangBasic
   Targets/TCE.cpp
   Targets/VE.cpp
   Targets/WebAssembly.cpp
+  Targets/Weather.cpp
   Targets/X86.cpp
   Targets/XCore.cpp
   Targets/Xtensa.cpp
