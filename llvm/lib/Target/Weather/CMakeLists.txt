@@ -1,7 +1,9 @@
 add_llvm_component_group(Weather)
 
 add_llvm_target(WeatherCodeGen
+  WeatherISelLowering.cpp
   WeatherTargetMachine.cpp
+  WeatherSubtarget.cpp
 
 
   LINK_COMPONENTS
@@ -10,6 +12,8 @@ add_llvm_target(WeatherCodeGen
 
   CodeGen
   Core
+  MC
+  SelectionDAG
   Support
   Target
 

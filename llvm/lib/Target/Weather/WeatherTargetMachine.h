@@ -13,13 +13,15 @@
 #ifndef LLVM_LIB_TARGET_WEATHER_WEATHERTARGETMACHINE_H
 #define LLVM_LIB_TARGET_WEATHER_WEATHERTARGETMACHINE_H
 
-
+#include "WeatherSubtarget.h"
 #include "llvm/CodeGen/CodeGenTargetMachineImpl.h"
 #include <optional>
+#include <memory>
 
 namespace llvm {
 
 class WeatherTargetMachine : public CodeGenTargetMachineImpl {
+  mutable std::unique_ptr<WeatherSubtarget> SubtargetSingleton;
 public:
   WeatherTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                        StringRef FS, const TargetOptions &Options,
@@ -28,6 +30,8 @@ public:
                        bool JIT);
 
   ~WeatherTargetMachine() override;
+
+  const WeatherSubtarget *getSubtargetImpl(const Function &F) const override;
 };
 
 

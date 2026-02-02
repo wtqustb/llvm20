@@ -1,0 +1,38 @@
+//===- WeatherSubtarget.h - Define Subtarget for the Weather----*- C++ -*-===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+//
+// This file declares the Weather specific subclass of TargetSubtarget.
+//
+//===----------------------------------------------------------------------===//
+
+#ifndef LLVM_LIB_TARGET_WEATHER_WEATHERSUBTARGET_H
+#define LLVM_LIB_TARGET_WEATHER_WEATHERSUBTARGET_H
+
+#include "WeatherISelLowering.h"
+#include "llvm/ADT/StringRef.h"
+#include "llvm/CodeGen/TargetSubtargetInfo.h"
+
+
+namespace llvm {
+
+class TargetMachine;
+class Triple;
+
+class WeatherSubtarget : public TargetSubtargetInfo {
+    virtual void anchor();
+    WeatherTargetLowering TLInfo;
+public:
+    WeatherSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
+                    const TargetMachine &TM, const TargetSubtargetInfo &STI);
+    const WeatherTargetLowering *getTargetLowering() const override {
+        return &TLInfo;
+    }
+};
+} // end namespace llvm
+
+#endif // LLVM_LIB_TARGET_WEATHER_WEATHERSUBTARGET_H

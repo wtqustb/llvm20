@@ -14,6 +14,7 @@
 #include "TargetInfo/WeatherTargetInfo.h" // For getTheWeatherTarget.
 #include "llvm/MC/TargetRegistry.h"     // For RegisterTargetMachine.
 #include "llvm/Support/Compiler.h"      // For LLVM_EXTERNAL_VISIBILITY.
+#include <memory>
 
 using namespace llvm;
 
@@ -35,3 +36,16 @@ WeatherTargetMachine::WeatherTargetMachine(const Target &T, const Triple &TT,
                                CM ? *CM : CodeModel::Small, OL) {}
 
 WeatherTargetMachine::~WeatherTargetMachine() = default;
+
+const WeatherSubtarget *
+WeatherTargetMachine::getSubtargetImpl(const Function &F) const {
+  Attribute CPUAttr = F.getFnAttribute("target-cpu");
+  Attribute FSAttr = F.getFnAttribute("target-features");
+  
+  StringRef CPU = CPUAttr.isValid() ? CPUAttr.getValueAsString() : TargetCPU;
+  StringRef FS = FSAttr.isValid() ? FSAttr.getValueAsString() : TargetFS;
+    if (!SubtargetSingleton) {
+        return nullptr;
+    }
+  return SubtargetSingleton.get();
+}
