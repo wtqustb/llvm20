@@ -5,6 +5,12 @@ set(LLVM_TARGET_DEFINITIONS Weather.td)
 tablegen(LLVM WeatherGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM WeatherGenRegisterInfo.inc -gen-register-info)
 tablegen(LLVM WeatherGenInstrInfo.inc -gen-instr-info)
+# MCInst to .s
+tablegen(LLVM WeatherGenAsmWriter.inc -gen-asm-writer)
+# .s to MCInst
+tablegen(LLVM WeatherGenAsmMatcher.inc -gen-asm-matcher)
+# Encoding.
+tablegen(LLVM WeatherGenMCCodeEmitter.inc -gen-emitter)
 
 add_public_tablegen_target(WeatherCommonTableGen)
 
@@ -35,6 +41,6 @@ add_llvm_target(WeatherCodeGen
   Weather
 )
 
-
+add_subdirectory(AsmParser)
 add_subdirectory(MCTargetDesc)
 add_subdirectory(TargetInfo)

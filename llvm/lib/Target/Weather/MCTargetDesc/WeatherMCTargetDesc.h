@@ -14,7 +14,14 @@
 #ifndef LLVM_LIB_TARGET_WEATHER_MCTARGETDESC_WEATHERMCTARGETDESC_H
 #define LLVM_LIB_TARGET_WEATHER_MCTARGETDESC_WEATHERMCTARGETDESC_H
 
+#include "llvm/MC/MCInstrInfo.h"
 #include <cstdint> // For int16_t and so on used in the .inc files.
+namespace llvm {
+class MCContext;
+class MCCodeEmitter;
+MCCodeEmitter *createWeatherMCCodeEmitter(const MCInstrInfo &MCII,
+                                        MCContext &Ctx);
+} // end namespace llvm.
 
 #define GET_REGINFO_ENUM
 #include "WeatherGenRegisterInfo.inc"

@@ -11,6 +11,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "WeatherMCTargetDesc.h"
+#include "WeatherInstPrinter.h"
 #include "WeatherMCAsmInfo.h"
 #include "TargetInfo/WeatherTargetInfo.h" // For getTheWeatherTarget.
 #include "llvm/MC/MCInstrInfo.h"
@@ -63,6 +64,14 @@ static MCAsmInfo *createWeatherMCAsmInfo(const MCRegisterInfo &MRI, const Triple
     return MAI;
 }
 
+static MCInstPrinter *createWeatherMCInstPrinter(const Triple &T, unsigned SyntaxVariant,
+                                           const MCAsmInfo &MAI, const MCInstrInfo &MII,
+                                           const MCRegisterInfo &MRI) {
+    if (SyntaxVariant == 0)
+        return new WeatherInstPrinter(MAI, MII, MRI);
+    return nullptr;
+}
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeWeatherTargetMC() {
   Target &TheTarget = getTheWeatherTarget();
 
@@ -76,4 +85,9 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeWeatherTargetMC() {
   // Register the MCSubtargetInfo.
   TargetRegistry::RegisterMCSubtargetInfo(getTheWeatherTarget(),
                                           createWeatherMCSubtargetInfo);
+  // Register the MCInstPrinter.
+  TargetRegistry::RegisterMCInstPrinter(TheTarget, createWeatherMCInstPrinter);
+  // Register the MC code emitter.
+  TargetRegistry::RegisterMCCodeEmitter(getTheWeatherTarget(),
+                                        createWeatherMCCodeEmitter);                                  
 }

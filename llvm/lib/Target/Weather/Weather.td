@@ -21,8 +21,11 @@ defm : RemapAllTargetPseudoPointerOperands<GPR32>;
 
 def : ProcessorModel<"generic", NoSchedModel, /*Features=*/[]>;
 
+def WeatherAsmParser : AsmParser;
+
 def WeatherInstrInfo : InstrInfo;
 
 def Weather : Target {
   let InstructionSet = WeatherInstrInfo;
+  let AssemblyParsers = [WeatherAsmParser];
 }
