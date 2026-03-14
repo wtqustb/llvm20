@@ -27,16 +27,23 @@ using namespace llvm;
 #define GET_SUBTARGETINFO_ENUM
 #include "WeatherGenSubtargetInfo.inc"
 
+#define GET_REGINFO_MC_DESC
+#include "WeatherGenRegisterInfo.inc"
+
+#define GET_INSTRINFO_MC_DESC
+#define GET_INSTRINFO_MC_HELPER
+#include "WeatherGenInstrInfo.inc"
+
 
 static MCRegisterInfo *createWeatherMCRegisterInfo(const Triple &Triple) {
     MCRegisterInfo *X = new MCRegisterInfo();
-    // TODO: Fill in the right register number for the zero register.
+    InitWeatherMCRegisterInfo(X, Weather::R7);
     return X;
 }
 
 static MCInstrInfo *createWeatherMCInstrInfo() {
     MCInstrInfo *X = new MCInstrInfo();
-    //TODO: Fill out the instr info.
+    InitWeatherMCInstrInfo(X);
     return X;
 }
 

@@ -13,6 +13,12 @@
 // Include the generic target definitions.
 include "llvm/Target/Target.td"
 
+include "WeatherRegisterInfo.td"
+
+include "WeatherInstrInfo.td"
+
+defm : RemapAllTargetPseudoPointerOperands<GPR32>;
+
 def : ProcessorModel<"generic", NoSchedModel, /*Features=*/[]>;
 
 def WeatherInstrInfo : InstrInfo;

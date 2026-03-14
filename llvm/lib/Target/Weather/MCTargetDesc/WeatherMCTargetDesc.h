@@ -14,7 +14,16 @@
 #ifndef LLVM_LIB_TARGET_WEATHER_MCTARGETDESC_WEATHERMCTARGETDESC_H
 #define LLVM_LIB_TARGET_WEATHER_MCTARGETDESC_WEATHERMCTARGETDESC_H
 
+#include <cstdint> // For int16_t and so on used in the .inc files.
+
+#define GET_REGINFO_ENUM
+#include "WeatherGenRegisterInfo.inc"
+
 #define GET_SUBTARGETINFO_ENUM
 #include "WeatherGenSubtargetInfo.inc"
+
+#define GET_INSTRINFO_ENUM
+#define GET_INSTRINFO_MC_HELPER_DECLS
+#include "WeatherGenInstrInfo.inc"
 
 #endif

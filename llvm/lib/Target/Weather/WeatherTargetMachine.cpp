@@ -21,6 +21,7 @@
 #include "llvm/PassRegistry.h"
 #include "llvm/Support/Compiler.h"      // For LLVM_EXTERNAL_VISIBILITY.
 #include "llvm/Passes/PassBuilder.h"
+#include "llvm/Support/CodeGen.h"       // For CodeGenOptLevel.
 #include <memory>
 
 using namespace llvm;
@@ -73,3 +74,16 @@ TargetPassConfig *WeatherTargetMachine::createPassConfig(PassManagerBase &PM) {
 
 WeatherPassConfig::WeatherPassConfig(TargetMachine &TM, PassManagerBase &PM)
     : TargetPassConfig(TM, PM) {}
+
+bool WeatherPassConfig::addInstSelector() {
+  // TODO: We need to hook up the DAG Selector Here.
+  return false; 
+}
+
+void WeatherPassConfig::addIRPasses() {
+  // Add the regular IR Passes before putting our passes
+  TargetPassConfig::addIRPasses();
+  if (getOptLevel() != CodeGenOptLevel::None) {
+    return; // here should add some optimization passes, but for now we just return.
+  }
+}

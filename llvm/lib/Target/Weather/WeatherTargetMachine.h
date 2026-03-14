@@ -50,6 +50,8 @@ class WeatherPassConfig : public TargetPassConfig {
 public:
   WeatherPassConfig(TargetMachine &TM, PassManagerBase &PM);
 
+  bool addInstSelector() override;
+  void addIRPasses() override;
 };
 
 } // end namespace llvm
