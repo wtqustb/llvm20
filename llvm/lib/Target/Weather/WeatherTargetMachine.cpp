@@ -11,9 +11,16 @@
 //===----------------------------------------------------------------------===//
 
 #include "WeatherTargetMachine.h"
+#include "Weather.h"
+#include "WeatherSubtarget.h"
+#include "WeatherTargetTransformInfo.h"
 #include "TargetInfo/WeatherTargetInfo.h" // For getTheWeatherTarget.
+#include "llvm/Analysis/TargetTransformInfo.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/MC/TargetRegistry.h"     // For RegisterTargetMachine.
+#include "llvm/PassRegistry.h"
 #include "llvm/Support/Compiler.h"      // For LLVM_EXTERNAL_VISIBILITY.
+#include "llvm/Passes/PassBuilder.h"
 #include <memory>
 
 using namespace llvm;
@@ -21,6 +28,9 @@ using namespace llvm;
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeWeatherTarget() {
     // Register the target so that external tools can instantiate it.
     RegisterTargetMachine<WeatherTargetMachine> X(getTheWeatherTarget());
+
+    PassRegistry &PR = *PassRegistry::getPassRegistry();
+
 }
 
 static const char *WeatherDataLayoutStr = "e-p:16:16:16-n16:32-i32:32:32-i16:16:16-i1:8:8-f32:32:32-v32:32:32";
@@ -33,7 +43,9 @@ WeatherTargetMachine::WeatherTargetMachine(const Target &T, const Triple &TT,
                                          CodeGenOptLevel OL, bool JIT)
     : CodeGenTargetMachineImpl(T, WeatherDataLayoutStr, TT, CPU, FS, Options,
                                RM ? *RM : Reloc::Model::Static,
-                               CM ? *CM : CodeModel::Small, OL) {}
+                               CM ? *CM : CodeModel::Small, OL) {
+  initAsmInfo();
+}
 
 WeatherTargetMachine::~WeatherTargetMachine() = default;
 
@@ -49,3 +61,15 @@ WeatherTargetMachine::getSubtargetImpl(const Function &F) const {
     }
   return SubtargetSingleton.get();
 }
+
+TargetTransformInfo
+WeatherTargetMachine::getTargetTransformInfo(const Function &F) const {
+  return TargetTransformInfo(std::make_unique<WeatherTTIImpl>(this, F));
+}
+
+TargetPassConfig *WeatherTargetMachine::createPassConfig(PassManagerBase &PM) {
+  return new WeatherPassConfig(*this, PM);
+}
+
+WeatherPassConfig::WeatherPassConfig(TargetMachine &TM, PassManagerBase &PM)
+    : TargetPassConfig(TM, PM) {}

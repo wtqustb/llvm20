@@ -14,7 +14,11 @@
 #define LLVM_LIB_TARGET_WEATHER_WEATHERTARGETMACHINE_H
 
 #include "WeatherSubtarget.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Target/TargetLoweringObjectFile.h"
 #include "llvm/CodeGen/CodeGenTargetMachineImpl.h"
+#include "llvm/Target/TargetMachine.h"
 #include <optional>
 #include <memory>
 
@@ -22,6 +26,7 @@ namespace llvm {
 
 class WeatherTargetMachine : public CodeGenTargetMachineImpl {
   mutable std::unique_ptr<WeatherSubtarget> SubtargetSingleton;
+  std::unique_ptr<TargetLoweringObjectFile> TLOF;
 public:
   WeatherTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                        StringRef FS, const TargetOptions &Options,
@@ -32,8 +37,20 @@ public:
   ~WeatherTargetMachine() override;
 
   const WeatherSubtarget *getSubtargetImpl(const Function &F) const override;
+  TargetTransformInfo getTargetTransformInfo(const Function &F) const override;
+
+  TargetLoweringObjectFile *getObjFileLowering() const override {
+    return TLOF.get();
+   }
+
+  TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
 };
 
+class WeatherPassConfig : public TargetPassConfig {
+public:
+  WeatherPassConfig(TargetMachine &TM, PassManagerBase &PM);
+
+};
 
 } // end namespace llvm
 
