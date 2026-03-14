@@ -21,3 +21,7 @@ using namespace llvm;
 
 WeatherTargetLowering::WeatherTargetLowering(const TargetMachine &TM, const TargetSubtargetInfo &STI)
     : TargetLowering(TM, STI) {}
+
+
+// Calling Convention Implementation
+#include "WeatherGenCallingConv.inc"

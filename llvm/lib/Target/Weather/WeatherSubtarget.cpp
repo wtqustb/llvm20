@@ -15,14 +15,14 @@
 
 using namespace llvm;
 
+#define DEBUG_TYPE "Weather-subtarget"
+
+#define GET_SUBTARGETINFO_TARGET_DESC
+#define GET_SUBTARGETINFO_CTOR
+#include "WeatherGenSubtargetInfo.inc"
+
 void WeatherSubtarget::anchor() {}
 
 WeatherSubtarget::WeatherSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
                                    const TargetMachine &TM, const TargetSubtargetInfo &STI)
-    : TargetSubtargetInfo(TT, CPU, /*TuneCPU=*/"", FS, /*PN=*/{}, /*PF=*/{},
-                          /*PD=*/{},
-                          /*WPR=*/nullptr,
-                          /*WL=*/nullptr,
-                          /*RA=*/nullptr, /*IS=*/nullptr,
-                          /*OC=*/nullptr, /*FP=*/nullptr),
-      TLInfo(TM, STI) {}
+     : WeatherGenSubtargetInfo(TT, CPU, /*TuneCPU=*/"", FS), TLInfo(TM, *this) {}

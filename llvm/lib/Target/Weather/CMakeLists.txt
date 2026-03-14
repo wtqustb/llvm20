@@ -12,11 +12,16 @@ tablegen(LLVM WeatherGenAsmMatcher.inc -gen-asm-matcher)
 # Encoding.
 tablegen(LLVM WeatherGenMCCodeEmitter.inc -gen-emitter)
 
+tablegen(LLVM WeatherGenCallingConv.inc -gen-callingconv)
+
 add_public_tablegen_target(WeatherCommonTableGen)
 
 add_llvm_target(WeatherCodeGen
   WeatherISelLowering.cpp
   WeatherSubtarget.cpp
+  WeatherInstrInfo.cpp
+  WeatherFrameLowering.cpp
+  WeatherRegisterInfo.cpp
   WeatherTargetMachine.cpp
   WeatherTargetObjectFile.cpp
   WeatherTargetTransformInfo.cpp
